@@ -9,9 +9,14 @@
 # testing
 /coverage
 
+# sqlite for prisma
+/prisma/dev.db
+
 # next.js
 /.next/
 /out/
+
+.env
 
 # production
 /build
