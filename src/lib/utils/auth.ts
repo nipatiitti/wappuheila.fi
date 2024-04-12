@@ -33,6 +33,7 @@ export const {
       return session
     },
   },
+  trustHost: true,
   // @ts-ignore
   adapter: PrismaAdapter(prisma),
 })
