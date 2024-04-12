@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "production-start": "yarn generate && next start",
+    "compile": "next experimental-compile",
+    "generate": "next experimental-generate",
+    "lint": "next lint",
+    "prisma-generate": "prisma generate",
+    "update": "export $(cat ./.env.development.local) && prisma db push"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.6.0",

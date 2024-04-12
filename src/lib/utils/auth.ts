@@ -1,10 +1,16 @@
+import 'server-only'
+
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import { redirect } from 'next/navigation'
 import { prisma } from './db'
 
-import 'server-only'
+declare module 'next-auth' {
+  interface Session {
+    owner?: boolean
+  }
+}
 
 export const {
   handlers: { GET, POST },
@@ -19,6 +25,11 @@ export const {
   callbacks: {
     session({ session, user }) {
       if (session.user) session.user.id = user.id
+
+      if (user.email === process.env.ADMIN_EMAIL) {
+        session.owner = true
+      }
+
       return session
     },
   },

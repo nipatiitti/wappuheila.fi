@@ -3,7 +3,7 @@
 import { userAction } from '@/lib/utils/auth'
 import { prisma } from '@/lib/utils/db'
 import { validate } from '@/lib/utils/validate'
-import { revalidateTag } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
@@ -69,4 +69,25 @@ export async function deleteProfile() {
 
   revalidateTag('profile')
   return redirect('/')
+}
+
+const AdminDeleteProfileDTO = z.object({
+  profileId: z.coerce.number(),
+})
+
+export async function adminDeleteProfile(data: FormData) {
+  const { owner } = await userAction()
+  if (!owner) {
+    throw new Error('Unauthorized')
+  }
+
+  const { profileId } = validate(AdminDeleteProfileDTO, data)
+
+  await prisma.profile.delete({
+    where: {
+      id: profileId,
+    },
+  })
+
+  revalidatePath('/')
 }

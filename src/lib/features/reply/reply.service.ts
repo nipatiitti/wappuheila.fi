@@ -6,5 +6,20 @@ export async function getProfileReplys(profileId: number) {
       profileId,
       deleted: false,
     },
+    select: {
+      createdAt: true,
+      id: true,
+      reply: true,
+      username: true,
+    },
+  })
+}
+
+export async function countProfileReplys(profileId: number) {
+  return prisma.profileReply.count({
+    where: {
+      profileId,
+      deleted: false,
+    },
   })
 }

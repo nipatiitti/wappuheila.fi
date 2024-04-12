@@ -3,6 +3,7 @@
 import { userAction } from '@/lib/utils/auth'
 import { prisma } from '@/lib/utils/db'
 import { validate } from '@/lib/utils/validate'
+import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 // Comes from a form-data
@@ -27,9 +28,18 @@ export async function addProfileReply(data: FormData) {
       deleted: false,
     },
   })
+
+  revalidatePath(`/p/${profileId}`)
+  return true
 }
 
-export async function deleteReply(replyId: number) {
+const deleteReplyDTO = z.object({
+  replyId: z.coerce.number(),
+})
+
+export async function deleteReply(data: FormData) {
+  const { replyId } = validate(deleteReplyDTO, data)
+
   // make sure the reply exists, and the user is allowed to delete it
   const { user } = await userAction()
   const userProfile = await prisma.profile.findFirst({
@@ -37,6 +47,10 @@ export async function deleteReply(replyId: number) {
       userId: user?.id,
     },
   })
+
+  if (!userProfile) {
+    return
+  }
 
   // If the reply isn't addressed to the users profile, abort this action
   const reply = await prisma.profileReply.findFirst({
@@ -58,4 +72,7 @@ export async function deleteReply(replyId: number) {
       deleted: true,
     },
   })
+
+  revalidatePath(`/p/${userProfile.id}`)
+  return true
 }

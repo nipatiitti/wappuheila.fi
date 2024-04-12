@@ -35,7 +35,7 @@ export const getCachedProfiles = unstable_cache(
   }
 )
 
-export const getCachedProfile = async (id: number) => {
+export const getProfile = async (id: number) => {
   return await prisma.profile.findFirst({
     where: {
       id,
@@ -62,6 +62,22 @@ export const getProfileImage = async (id: number) => {
   })
 
   return profile?.image
+}
+
+export const isOwnProfile = async (id: number) => {
+  const session = await auth()
+  if (!session) return false
+
+  const profile = await prisma.profile.findFirst({
+    where: {
+      userId: session.user?.id,
+    },
+    select: {
+      id: true,
+    },
+  })
+
+  return profile?.id === id
 }
 
 export type PublicProfile = {

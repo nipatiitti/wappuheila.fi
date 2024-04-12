@@ -1,4 +1,4 @@
-import { getCachedProfile } from '@/lib/features/profile/profile.service'
+import { getProfile, isOwnProfile } from '@/lib/features/profile/profile.service'
 import { getProfileReplys } from '@/lib/features/reply/reply.service'
 import { redirect } from 'next/navigation'
 import { CSSProperties } from 'react'
@@ -7,10 +7,11 @@ import { Replies } from './Replies'
 
 export default async function ProfilePage({ params }: { params: { id: string } }) {
   const id = parseInt(params.id)
-  const profile = await getCachedProfile(id)
+  const profile = await getProfile(id)
   const replys = await getProfileReplys(id)
+  const ownProfile = await isOwnProfile(id)
 
-  console.log({ profile, replys })
+  console.log(ownProfile)
 
   if (!profile) {
     redirect('/')
@@ -38,17 +39,19 @@ export default async function ProfilePage({ params }: { params: { id: string } }
       </div>
       <h2 className="mt-1 max-w-full text-xl font-bold text-ellipsis break-words">{profile.title}</h2>
       <p className="mt-1 max-w-full text-sm font-light text-ellipsis break-words whitespace-pre-wrap">{profile.bio}</p>
-      <a href="/" className="relative inline-block px-4 py-2 font-medium group mt-2">
-        <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
-        <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
-        <span className="relative text-black group-hover:text-white flex items-center">
-          <i className="mr-2">
-            <FaArrowLeft />
-          </i>
-          Takaisin
-        </span>
-      </a>
-      <Replies profileId={id} replys={replys} />
+      <div className="py-2 mt-3 bg-[#ffebc5] sticky top-0 w-full flex justify-center z-10">
+        <a href="/" className="relative inline-block px-4 py-2 font-medium group">
+          <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
+          <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
+          <span className="relative text-black group-hover:text-white flex items-center">
+            <i className="mr-2">
+              <FaArrowLeft />
+            </i>
+            Takaisin
+          </span>
+        </a>
+      </div>
+      <Replies profileId={id} replys={replys} isOwnProfile={ownProfile} />
     </div>
   )
 }

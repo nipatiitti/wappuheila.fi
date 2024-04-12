@@ -1,11 +1,12 @@
 'use client'
 
+import { adminDeleteProfile } from '@/lib/features/profile/profile.actions'
 import { PublicProfile } from '@/lib/features/profile/profile.service'
 import { CSSProperties, useState } from 'react'
 import { FaEnvelopeOpen } from 'react-icons/fa'
 import { TbRotate360 } from 'react-icons/tb'
 
-export function ProfileCard({ profile }: { profile: PublicProfile }) {
+export function ProfileCard({ profile, owner }: { profile: PublicProfile; owner: boolean }) {
   const color = profile.overallsColor || 'black'
 
   const [flipped, setFlipped] = useState(false)
@@ -20,8 +21,16 @@ export function ProfileCard({ profile }: { profile: PublicProfile }) {
         } as CSSProperties
       }
     >
+      {owner && (
+        <form action={adminDeleteProfile} className="absolute top-2 right-2 z-50">
+          <input type="hidden" name="profileId" value={profile.id} />
+          <button type="submit" className="text-xs text-red-500">
+            Poista
+          </button>
+        </form>
+      )}
       <div
-        className="flex flex-col items-start relative justify-start p-4 z-10 bg-white border-2 border-[--color] rounded-none shadow-md bg-opacity-95"
+        className="flex flex-col h-full items-start relative justify-start p-4 z-10 bg-white border-2 border-[--color] rounded-none shadow-md bg-opacity-95"
         style={
           flipped
             ? {
@@ -44,7 +53,7 @@ export function ProfileCard({ profile }: { profile: PublicProfile }) {
         <div className="mt-2 flex items-center">
           <span className="text-xs font-light opacity-50">{profile.contact}</span>
         </div>
-        <div className="flex gap-4 w-full justify-center mt-2">
+        <div className="flex flex-1 gap-4 w-full justify-center items-end mt-2">
           <button className="relative inline-block px-4 py-2 font-medium group">
             <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
             <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
@@ -53,7 +62,7 @@ export function ProfileCard({ profile }: { profile: PublicProfile }) {
             </span>
           </button>
           <a
-            href={`/${profile.id}`}
+            href={`/p/${profile.id}`}
             onClick={(e) => e.stopPropagation()}
             className="relative inline-block px-4 py-2 font-medium group"
           >

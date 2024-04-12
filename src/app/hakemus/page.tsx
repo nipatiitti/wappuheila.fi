@@ -1,7 +1,8 @@
 import { deleteProfile, upsertProfile } from '@/lib/features/profile/profile.actions'
 import { getUserProfile } from '@/lib/features/profile/profile.service'
 import { userExists } from '@/lib/utils/auth'
-import { FaPaperPlane, FaSave, FaTrashAlt } from 'react-icons/fa'
+import { FaArrowLeft, FaPaperPlane, FaSave, FaTrashAlt } from 'react-icons/fa'
+import { FileUpload } from './FileUpload'
 
 export default async function Hakemus() {
   await userExists()
@@ -106,32 +107,22 @@ export default async function Hakemus() {
         <label htmlFor="image" className="peer  text-black">
           Hakemuksen kuva (max 2MB)
         </label>
-        <input
-          type="file"
-          accept="image/*"
-          id="image"
-          name="image"
-          className="peer p-2 w-full h-full bg-white border-2 border-black rounded-none outline-none"
-        />
+        <FileUpload />
       </div>
 
-      {!profile && (
-        <div className="flex justify-center">
-          <button type="submit" className="relative inline-block px-4 py-2 font-medium group ">
-            <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
-            <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
-            <span className="relative text-black group-hover:text-white flex items-center justify-center">
-              <i className="mr-2">
-                <FaPaperPlane />
-              </i>
-              Lähetä Hakemus
-            </span>
-          </button>
-        </div>
-      )}
-      {profile && (
-        <>
-          <div className="flex flex-col justify-center gap-6">
+      <div className="flex flex-wrap-reverse justify-center gap-6">
+        <a href="/" className="relative inline-block px-4 py-2 font-medium group w-min">
+          <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
+          <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
+          <span className="relative text-black group-hover:text-white flex items-center justify-center">
+            <i className="mr-2">
+              <FaArrowLeft />
+            </i>
+            Takaisin
+          </span>
+        </a>
+        {profile ? (
+          <>
             <button
               type="submit"
               className="relative inline-block px-4 py-2 font-medium group"
@@ -156,9 +147,20 @@ export default async function Hakemus() {
                 Tallenna Hakemus
               </span>
             </button>
-          </div>
-        </>
-      )}
+          </>
+        ) : (
+          <button type="submit" className="relative inline-block px-4 py-2 font-medium group ">
+            <span className="absolute inset-0 w-full h-full transition duration-200 ease-out transform translate-x-1 translate-y-1 bg-black group-hover:-translate-x-0 group-hover:-translate-y-0"></span>
+            <span className="absolute inset-0 w-full h-full bg-white border-2 border-black group-hover:bg-black"></span>
+            <span className="relative text-black group-hover:text-white flex items-center justify-center">
+              <i className="mr-2">
+                <FaPaperPlane />
+              </i>
+              Lähetä Hakemus
+            </span>
+          </button>
+        )}
+      </div>
     </form>
   )
 }
