@@ -1,11 +1,16 @@
 import { getCachedProfile } from '@/lib/features/profile/profile.service'
+import { getProfileReplys } from '@/lib/features/reply/reply.service'
 import { redirect } from 'next/navigation'
 import { CSSProperties } from 'react'
 import { FaArrowLeft } from 'react-icons/fa'
+import { Replies } from './Replies'
 
 export default async function ProfilePage({ params }: { params: { id: string } }) {
   const id = parseInt(params.id)
   const profile = await getCachedProfile(id)
+  const replys = await getProfileReplys(id)
+
+  console.log({ profile, replys })
 
   if (!profile) {
     redirect('/')
@@ -43,6 +48,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
           Takaisin
         </span>
       </a>
+      <Replies profileId={id} replys={replys} />
     </div>
   )
 }

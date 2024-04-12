@@ -101,6 +101,7 @@ model ProfileReply {
   profileId Int
   profile   Profile @relation(fields: [profileId], references: [id])
   reply     String
+  username  String
   deleted   Boolean @default(false)
   createdAt DateTime @default(now())
 }
