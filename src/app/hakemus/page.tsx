@@ -105,7 +105,7 @@ export default async function Hakemus() {
 
       <div className="relative font-medium group">
         <label htmlFor="image" className="peer  text-black">
-          Hakemuksen kuva (max 2MB)
+          Hakemuksen kuva (max 1MB)
         </label>
         <FileUpload />
       </div>

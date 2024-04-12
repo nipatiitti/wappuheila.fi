@@ -10,8 +10,8 @@ export const FileUpload = () => (
     className="peer p-2 w-full h-full bg-white border-2 border-black rounded-none outline-none"
     onChange={(e) => {
       // Make sure the file is under 2MB
-      if (e.target.files && e.target.files[0].size > 2 * 1024 * 1024) {
-        e.target.setCustomValidity('Kuvan koko saa olla korkeintaan 2MB')
+      if (e.target.files && e.target.files[0].size > 1 * 1024 * 1024) {
+        e.target.setCustomValidity('Kuvan koko saa olla korkeintaan 1MB')
       } else {
         e.target.setCustomValidity('')
       }

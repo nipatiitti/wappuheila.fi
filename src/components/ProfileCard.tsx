@@ -78,6 +78,7 @@ export function ProfileCard({ profile, owner }: { profile: PublicProfile; owner:
         className="border-2 border-[--color] rounded-none shadow-md"
         src={`/api/images/${profile.id}`}
         alt={profile.username}
+        loading="lazy"
         style={
           flipped
             ? {
